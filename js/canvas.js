@@ -85,7 +85,7 @@ function birdFly(birdImageChose) {
         if (birdImageChose == 1) bird = bird1_25;
         if (birdImageChose == 2) bird = bird2_25;
         if (birdImageChose == 3) bird = bird3_25;
-    } else if(birdFlightFrame > 30 && state.current != state.ready){
+    } else if(birdFlightFrame >= 30 && state.current != state.ready){
         if (birdImageChose == 0) bird = bird0_90;
         if (birdImageChose == 1) bird = bird1_90;
         if (birdImageChose == 2) bird = bird2_90;
@@ -98,7 +98,8 @@ function birdFly(birdImageChose) {
     }
 }
 function flyUp(){
-    birdY-=jumpUp;
+    if(state.current == state.game)
+        birdY-=jumpUp;
     if(state.current != state.over)
         birdFlightFrame=0;
 }
@@ -190,13 +191,16 @@ function draw() {
                 let speed = 0;
                 birdX+=10;
                 birdY+=10;
+                birdFlightFrame=30;
+                
             }
             //Upper & bottom pipes
             if(birdX+birdWidth >= pipes[i].x  && birdX < pipes[i].x + pipeWidth
                 && ((birdY + birdHeight > pipes[i].y && birdY < pipes[i].y + pipeUpHeight)
                 ||  (birdY + birdHeight > pipes[i].y+gap+pipeUpHeight ))){
                 state.current = state.over;
-                birdX+=10;               
+                birdX+=10;   
+                birdFlightFrame=30;            
             }
             if(pipes[i].x==50){
                 pipes.push({
