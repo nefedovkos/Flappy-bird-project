@@ -19,7 +19,7 @@ let birdWidth = 34;
 let birdHeight = 24;
 let score = 0;
 let bestScore = parseInt(localStorage.getItem("bestScore")) || 0;
-
+let birdFlightFrame = 0;
 
 
 //Load images
@@ -31,7 +31,6 @@ let pipeUP = new Image();
 pipeUP.src = "images/pipeUP.png";
 let pipeBottom = new Image();
 pipeBottom.src = "images/pipeBottom.png";
-
 
 let bird0 = new Image();
 bird0.src = "images/bird0.png";
@@ -59,7 +58,6 @@ let bird2_90 = new Image();
 bird2_90.src = "images/bird2_90.png";
 let bird3_90 = new Image();
 bird3_90.src = "images/bird3_90.png";
-let birdFlightFrame = 0;
 
 let bird = new Image();
 bird.src = "images/bird0.png";
@@ -79,7 +77,6 @@ pipes [0] = {
     x:290,
     y:0
 }
-
 //bird
 function birdFly(birdImageChose) {
     //if(state.current == state.ready);
@@ -88,19 +85,16 @@ function birdFly(birdImageChose) {
         if (birdImageChose == 1) bird = bird1_25;
         if (birdImageChose == 2) bird = bird2_25;
         if (birdImageChose == 3) bird = bird3_25;
-
     } else if(birdFlightFrame > 30 && state.current != state.ready){
         if (birdImageChose == 0) bird = bird0_90;
         if (birdImageChose == 1) bird = bird1_90;
         if (birdImageChose == 2) bird = bird2_90;
         if (birdImageChose == 3) bird = bird3_90;
-
     } else {
         if (birdImageChose == 0) bird = bird0;
         if (birdImageChose == 1) bird = bird1;
         if (birdImageChose == 2) bird = bird2;
         if (birdImageChose == 3) bird = bird3;
-
     }
 }
 function flyUp(){
@@ -108,7 +102,6 @@ function flyUp(){
     if(state.current != state.over)
         birdFlightFrame=0;
 }
-
 //Game state
 let state = {
     current: 0,
@@ -120,7 +113,6 @@ function moveBottom(){
     backgroundBottomX-=speed;
     if(backgroundBottomX<-50)
         backgroundBottomX=0;
-
 }
 //Control states
 document.addEventListener("click",function (event) {
@@ -133,7 +125,6 @@ document.addEventListener("click",function (event) {
             flyUp();
             break;
         case state.over:
-
             let rect = canvas.getBoundingClientRect();
             let clickX = event.clientX - rect.left;
             let clickY = event.clientY - rect.top;
@@ -154,7 +145,6 @@ document.addEventListener("click",function (event) {
             break;
     }
 })
-
 // Draw
 function draw() {
     //clear canvas
@@ -191,7 +181,6 @@ function draw() {
                 bestScore=Math.max(score,bestScore);
                 localStorage.setItem("bestScore",bestScore);
             }
-
             //Collision
             //Bottom background
             if (birdY + birdHeight >= canvas.offsetHeight - 108) {
@@ -201,32 +190,26 @@ function draw() {
                 let speed = 0;
                 birdX+=10;
                 birdY+=10;
-                
             }
             //Upper & bottom pipes
             if(birdX+birdWidth >= pipes[i].x  && birdX < pipes[i].x + pipeWidth
                 && ((birdY + birdHeight > pipes[i].y && birdY < pipes[i].y + pipeUpHeight)
                 ||  (birdY + birdHeight > pipes[i].y+gap+pipeUpHeight ))){
                 state.current = state.over;
-                birdX+=10;
-                
+                birdX+=10;               
             }
             if(pipes[i].x==50){
                 pipes.push({
                     x: canvas.width,
                     y: Math.floor(Math.random() * pipeUpHeight) - pipeUpHeight});
             }
-
         }
-        
-
         context.fillStyle = "#fff";
         context.strokeStyle = "#000" ;
         context.lineWidth = 4;
         context.font = "40px verdana";
         context.strokeText(score,canvas.width/2-25, 50);
         context.fillText(score,canvas.width/2-25, 50);
-
     }
     if (state.current == state.over) {
         context.drawImage(pipeUP,pipes[0].x,pipes[0].y);
@@ -234,7 +217,7 @@ function draw() {
         context.drawImage(backgroundBottom, backgroundBottomX, backgroundBottomY);
         birdY+=gravity;
         if(birdY >= backgroundBottomY-birdHeight-10)
-                    birdY=backgroundBottomY-birdHeight-10;
+             birdY=backgroundBottomY-birdHeight-10;
         context.drawImage(bird, birdX, birdY);
         context.drawImage(scoreOver, 98, 70);
         context.fillStyle = "#fff";
@@ -249,26 +232,20 @@ function draw() {
         context.drawImage(shareBtn, 154, 230);
     }
 }
-
 // Update
 function update(){
+    frames++;
     if(frames%periodWings == 0){
         birdImageChose++;
         birdImageChose%=4;
         birdFlightFrame++;
         birdFly(birdImageChose);
     }
-
-
 }
-
-
-
 //Loop
 function loop(){
     update();
     draw();
-    frames++;
     requestAnimationFrame(loop);
 }
 loop();
